@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/welcome"
+    tools:context=".WelcomeActivity">
+
+    <Button
+        android:id="@+id/welcome_driver_btn"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="436dp"
+        android:background="#E91E63"
+        android:backgroundTint="#D9DDD4"
+        android:text="I AM A DRIVER"
+        android:textColor="#101010"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/welcome_customer_btn"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="496dp"
+        android:background="@color/purple_200"
+        android:backgroundTint="#F3214B"
+        android:text="I AM A CUSTOMER"
+        android:textColor="#F6F3F3"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

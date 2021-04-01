@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Android beginning</string>
+    <string name="i_am_a_driver">I am a Driver</string>
+    <string name="i_am_a_customer">I am a Customer</string>
+</resources>
