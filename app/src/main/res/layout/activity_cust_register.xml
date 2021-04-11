@@ -4,6 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/register"
     tools:context=".CustRegisterActivity">
 
+    <TextView
+        android:id="@+id/cust_register_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="372dp"
+        android:text="Customer Login"
+        android:textAlignment="center"
+        android:textColor="#090909"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/email_cust"
+        android:layout_width="354dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="305dp"
+        android:background="@color/design_default_color_background"
+        android:backgroundTint="#FCFCFD"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textColor="#0C0C0C" />
+
+    <EditText
+        android:id="@+id/password_cust"
+        android:layout_width="354dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="240dp"
+        android:background="@color/design_default_color_background"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/dont_have_an_acc_cust"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="123dp"
+        android:text="Don't have an account?"
+        android:textAlignment="center"
+        android:textColor="#E42424"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/register_btn_cust"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="67dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/black"
+        android:text="REGISTER"
+        android:textColor="#F3ECEC"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/cust_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="158dp"
+        android:layout_marginBottom="167dp"
+        android:backgroundTint="#FF9800"
+        android:text="Login" />
 </RelativeLayout>

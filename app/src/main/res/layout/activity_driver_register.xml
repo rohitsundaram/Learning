@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,73 +8,101 @@
     tools:context=".DriverRegisterActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/login_text_driver"
+        android:layout_width="406dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="322dp"
-        android:layout_marginEnd="123dp"
-        android:text="Driver Registration"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="378dp"
+        android:text="Driver Login"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/cardview_light_background"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="fill_parent"
-        android:layout_height="43dp"
+        android:id="@+id/email_driver"
+        android:layout_width="354dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
         android:layout_marginTop="18dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="305dp"
+        android:background="@color/cardview_light_background"
         android:backgroundTint="#FFFFFF"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textColor="#2196F3"
-        android:textColorHint="#6B3DBD"
+        android:textColor="@color/material_on_surface_emphasis_high_type"
+        android:textColorHint="#423F3F"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/login_text_driver" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="fill_parent"
-        android:layout_height="41dp"
+        android:id="@+id/password_driver"
+        android:layout_width="354dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="239dp"
+        android:background="@color/cardview_light_background"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColor="#191717"
+        android:textColorHint="#757474"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/email_driver" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="156dp"
-        android:backgroundTint="#FDFEFF"
-        android:text="Login"
-        android:textAlignment="center"
-        android:textColor="#DC1414"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
-
-    <Button
-        android:id="@+id/button2"
+        android:id="@+id/register_btn_driver"
         android:layout_width="fill_parent"
         android:layout_height="57dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="27dp"
+        android:layout_marginBottom="70dp"
+        android:background="@color/white"
+        android:backgroundTint="#EA0202"
         android:text="Register"
+        android:textColor="#EAE2E2"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/driver_login_btn" />
+
+    <TextView
+        android:id="@+id/dont_hava_an_acc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="136dp"
+        android:text="Don't have an account?"
+        android:textColor="#F40F0F"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/driver_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="161dp"
+        android:layout_marginBottom="168dp"
+        android:backgroundTint="#FF9800"
+        android:text="Login" />
+</RelativeLayout>
