@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.w3c.dom.Text;
 
 public class CustRegisterActivity extends AppCompatActivity {
-    private Button LoginCustomer;
+    private Button LoginCustomerBtn;
     private Button RegisterCustomerBtn;
     private TextView LoginCustomerText;
     private TextView DontHaveAnAccount;
@@ -37,7 +37,7 @@ public class CustRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cust_register);
 
         RegisterCustomerBtn=(Button) findViewById(R.id.register_btn_cust);
-        LoginCustomer=(Button)findViewById(R.id.cust_login_btn);
+        LoginCustomerBtn=(Button)findViewById(R.id.cust_login_btn);
         LoginCustomerText=(TextView)findViewById(R.id.cust_register_text);
         DontHaveAnAccount=(TextView)findViewById(R.id.dont_have_an_acc_cust);
         EmailCustomer=(EditText)findViewById(R.id.email_cust);
@@ -52,7 +52,7 @@ public class CustRegisterActivity extends AppCompatActivity {
         DontHaveAnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginCustomer.setVisibility(View.INVISIBLE);
+                LoginCustomerBtn.setVisibility(View.INVISIBLE);
                 DontHaveAnAccount.setVisibility(View.INVISIBLE);
                 LoginCustomerText.setText("Customer Registration");
 
@@ -72,6 +72,49 @@ public class CustRegisterActivity extends AppCompatActivity {
                 RegisterCustomer(email,password);
             }
         });
+
+        LoginCustomerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email=EmailCustomer.getText().toString();
+                String password=PasswordCustomer.getText().toString();
+
+                LoginCustomer(email,password);
+            }
+        });
+
+    }
+
+    private void LoginCustomer(String email,String password)
+    {
+        if (TextUtils.isEmpty(email))
+            Toast.makeText(CustRegisterActivity.this, "Please write Email", Toast.LENGTH_SHORT).show();
+
+        else if (TextUtils.isEmpty(password))
+            Toast.makeText(CustRegisterActivity.this, "Please write Password", Toast.LENGTH_SHORT).show();
+
+        else
+        {
+            loading.setTitle("Customer Login");
+            loading.setMessage("Please wait while we verify your credentials");
+            loading.show();
+
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(CustRegisterActivity.this, "Customer Login Successful", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+
+                    else
+                    {
+                        Toast.makeText(CustRegisterActivity.this, "Customer Login Unsuccessful. Please Try again", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+                }
+            });
+        }
 
     }
 
@@ -105,4 +148,5 @@ public class CustRegisterActivity extends AppCompatActivity {
             });
         }
     }
+
 }

@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class DriverRegisterActivity extends AppCompatActivity {
 
-    private Button LoginDriver;
+    private Button LoginDriverBtn;
     private Button RegisterDriverBtn;
     private TextView LoginDriverText;
     private TextView DontHaveAnAccount;
@@ -34,7 +34,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_register);
 
         RegisterDriverBtn=(Button) findViewById(R.id.register_btn_driver);
-        LoginDriver=(Button)findViewById(R.id.driver_login_btn);
+        LoginDriverBtn=(Button)findViewById(R.id.driver_login_btn);
         LoginDriverText=(TextView)findViewById(R.id.login_text_driver);
         DontHaveAnAccount=(TextView)findViewById(R.id.dont_hava_an_acc);
         EmailDriver=(EditText)findViewById(R.id.email_driver);
@@ -49,7 +49,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
         DontHaveAnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginDriver.setVisibility(View.INVISIBLE);
+                LoginDriverBtn.setVisibility(View.INVISIBLE);
                 DontHaveAnAccount.setVisibility(View.INVISIBLE);
                 LoginDriverText.setText("Driver Registration");
 
@@ -69,6 +69,49 @@ public class DriverRegisterActivity extends AppCompatActivity {
                 RegisterDriver(email,password);
             }
         });
+
+        LoginDriverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email=EmailDriver.getText().toString();
+                String password=PasswordDriver.getText().toString();
+
+                LoginDriver(email,password);
+            }
+        });
+
+    }
+
+    private void LoginDriver(String email,String password)
+    {
+        if (TextUtils.isEmpty(email))
+            Toast.makeText(DriverRegisterActivity.this, "Please write Email", Toast.LENGTH_SHORT).show();
+
+        else if (TextUtils.isEmpty(password))
+            Toast.makeText(DriverRegisterActivity.this, "Please write Password", Toast.LENGTH_SHORT).show();
+
+        else
+        {
+            loading.setTitle("Driver Login");
+            loading.setMessage("Please wait while we verify your credentials");
+            loading.show();
+
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()) {
+                        Toast.makeText(DriverRegisterActivity.this, "Driver Login Successful", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+
+                    else
+                    {
+                        Toast.makeText(DriverRegisterActivity.this, "Driver Login Unsuccessful. Please Try again", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                    }
+                }
+            });
+        }
     }
 
     private void RegisterDriver(String email,String password) {
