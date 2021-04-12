@@ -10,9 +10,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.internal.GoogleApiAvailabilityCache;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,22 +24,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback,
+public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-
     GoogleApiClient googleApiClient;
-    Location lastlocation;
+    Location lastLocation;
     LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_map);
+        setContentView(R.layout.activity_maps_driver);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -47,13 +52,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         buildGoogleApiClient();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
         mMap.setMyLocationEnabled(true);
-
     }
 
     @Override
@@ -64,6 +69,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -81,20 +87,36 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onLocationChanged(Location location) {
-        lastlocation=location;
-        LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+    lastLocation=location;
+    LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
+    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+    String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailabilityRef= FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+        GeoFire geoFire=new GeoFire(DriverAvailabilityRef);
+        geoFire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
+
     }
 
-    protected synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient()
+    {
         googleApiClient=new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
-        googleApiClient.clearDefaultAccountAndReconnect();
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailabilityRef= FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+        GeoFire geoFire=new GeoFire(DriverAvailabilityRef);
+        geoFire.removeLocation(userID);
+
     }
 }

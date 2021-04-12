@@ -104,7 +104,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         Toast.makeText(DriverRegisterActivity.this, "Driver Login Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
 
-                        Intent DriverIntent=new Intent(DriverRegisterActivity.this,DriverMapActivity.class);
+                        Intent DriverIntent=new Intent(DriverRegisterActivity.this,MapsActivityDriver.class);
                         startActivity(DriverIntent);
                     }
 
@@ -138,7 +138,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         Toast.makeText(DriverRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
 
-                        Intent DriverIntent=new Intent(DriverRegisterActivity.this,DriverMapActivity.class);
+                        Intent DriverIntent=new Intent(DriverRegisterActivity.this,MapsActivityDriver.class);
                         startActivity(DriverIntent);
                     }
 
