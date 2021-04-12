@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -105,12 +106,15 @@ public class CustRegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(CustRegisterActivity.this, "Customer Login Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+
                     }
 
                     else
                     {
                         Toast.makeText(CustRegisterActivity.this, "Customer Login Unsuccessful. Please Try again", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+
+
                     }
                 }
             });
@@ -137,6 +141,7 @@ public class CustRegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(CustRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+
                     }
 
                     else
