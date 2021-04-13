@@ -25,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -95,8 +96,14 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference DriverAvailabilityRef= FirebaseDatabase.getInstance().getReference().child("Drivers Available");
         GeoFire geoFire=new GeoFire(DriverAvailabilityRef);
-        geoFire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
+        geoFire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
 
+                    }
+
+                });
     }
 
     protected synchronized void buildGoogleApiClient()
