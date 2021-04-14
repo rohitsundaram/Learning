@@ -106,6 +106,8 @@ public class CustRegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(CustRegisterActivity.this, "Customer Login Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+                        Intent CustomerIntent=new Intent(CustRegisterActivity.this,MapsActivityCustomer.class);
+                        startActivity(CustomerIntent);
 
                     }
 
@@ -141,6 +143,8 @@ public class CustRegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(CustRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
+                        Intent CustomerIntent=new Intent(CustRegisterActivity.this,MapsActivityCustomer.class);
+                        startActivity(CustomerIntent);
 
                     }
 
