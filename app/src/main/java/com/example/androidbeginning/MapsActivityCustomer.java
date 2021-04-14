@@ -46,6 +46,10 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private Button CustomerLogoutBtn;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private Button CustomerCallACabBtn;
+    private String customerID;
+    private DatabaseReference CustomerDatabaseRef;
+    private LatLng CustomerPickUpLocation;
 
 
     @Override
@@ -56,6 +60,9 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         CustomerLogoutBtn=(Button)findViewById(R.id.Customer_logout_btn);
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
+        customerID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        CustomerDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Customers Requests");
+        CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -67,6 +74,23 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
             public void onClick(View v) {
                 mAuth.signOut();
                 LogoutCustomer();
+            }
+        });
+
+        CustomerCallACabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GeoFire geoFire=new GeoFire(CustomerDatabaseRef);
+                geoFire.setLocation(customerID,new GeoLocation(lastLocation.getLatitude(),lastLocation.getLongitude()),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+
+                    }
+
+                });
+                CustomerPickUpLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick Up Customer From Here"));
             }
         });
     }
