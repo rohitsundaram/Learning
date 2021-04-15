@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -31,6 +33,8 @@ public class CustRegisterActivity extends AppCompatActivity {
     private ProgressDialog loading;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference customerDatabaseRef;
+    private String onlineCustomerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class CustRegisterActivity extends AppCompatActivity {
         PasswordCustomer=(EditText)findViewById(R.id.password_cust);
 
         mAuth=FirebaseAuth.getInstance();
+
         loading= new ProgressDialog(this);
 
         RegisterCustomerBtn.setVisibility(View.INVISIBLE);
@@ -104,10 +109,13 @@ public class CustRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(CustRegisterActivity.this, "Customer Login Successful", Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
+
                         Intent CustomerIntent=new Intent(CustRegisterActivity.this,MapsActivityCustomer.class);
                         startActivity(CustomerIntent);
+
+                        Toast.makeText(CustRegisterActivity.this, "Customer Login Successful", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+
 
                     }
 
@@ -141,10 +149,17 @@ public class CustRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(CustRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                        loading.dismiss();
+
+                        onlineCustomerID=mAuth.getCurrentUser().getUid();
+                        customerDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(onlineCustomerID);
+
+                        customerDatabaseRef.setValue(true);
+
                         Intent CustomerIntent=new Intent(CustRegisterActivity.this,MapsActivityCustomer.class);
                         startActivity(CustomerIntent);
+
+                        Toast.makeText(CustRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
 
                     }
 

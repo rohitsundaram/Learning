@@ -160,7 +160,12 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
         String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference DriverAvailabilityRef= FirebaseDatabase.getInstance().getReference().child("Drivers Available");
         GeoFire geoFire=new GeoFire(DriverAvailabilityRef);
-        geoFire.removeLocation(userID);
+        geoFire.removeLocation(userID, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                
+            }
+        });
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,this);
     }
 

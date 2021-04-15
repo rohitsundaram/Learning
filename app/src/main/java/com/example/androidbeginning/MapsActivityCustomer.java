@@ -15,6 +15,8 @@ import android.widget.Button;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -50,6 +52,10 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private String customerID;
     private DatabaseReference CustomerDatabaseRef;
     private LatLng CustomerPickUpLocation;
+    private DatabaseReference DriverDatabaseRef;
+    private int radius=1;
+    private Boolean driverFound=false;
+    private String driverFoundID;
 
 
     @Override
@@ -63,6 +69,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         customerID=FirebaseAuth.getInstance().getCurrentUser().getUid();
         CustomerDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Customers Requests");
         CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
+        DriverDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -91,10 +98,54 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                 });
                 CustomerPickUpLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick Up Customer From Here"));
+                CustomerCallACabBtn.setText("Getting your driver");
+                GetCloseDriverCab();
             }
         });
     }
 
+
+    private void GetCloseDriverCab()
+    {
+        GeoFire geoFire=new GeoFire(DriverDatabaseRef);
+        GeoQuery geoQuery=geoFire.queryAtLocation(new GeoLocation(CustomerPickUpLocation.latitude,CustomerPickUpLocation.longitude),radius);
+        geoQuery.removeAllListeners();
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if(!driverFound)
+                {
+                    driverFound=true;
+                    driverFoundID=key;
+                }
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if(!driverFound)
+                {
+                    radius=radius+1;
+                    GetCloseDriverCab();
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
