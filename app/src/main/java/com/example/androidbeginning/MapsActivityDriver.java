@@ -27,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,7 +55,10 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     private FirebaseUser currentUser;
     private Boolean currentLogoutDriverStatus=false;
     private DatabaseReference AssignedCustomerRef,AssignedCustomerPickUpRef;
-    private String DriverID,customerID;
+    private String DriverID,customerID="";
+    Marker PickUpMarker;
+
+    private ValueEventListener AssignedCustomerPickUpRefListner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,18 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                     customerID=snapshot.getValue().toString();
                     GetAssignedCustomerPickUpLocation();
                 }
+                else
+                {
+                    customerID="";
+                    if(PickUpMarker!=null)
+                    {
+                        PickUpMarker.remove();
+                    }
+                    if(AssignedCustomerPickUpRefListner!=null)
+                    {
+                        AssignedCustomerPickUpRef.removeEventListener(AssignedCustomerPickUpRefListner);
+                    }
+                }
             }
 
             @Override
@@ -109,7 +125,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
     private void GetAssignedCustomerPickUpLocation()
     {
         AssignedCustomerPickUpRef=FirebaseDatabase.getInstance().getReference().child("Customer Requests").child(customerID).child("l");
-        AssignedCustomerPickUpRef.addValueEventListener(new ValueEventListener() {
+        AssignedCustomerPickUpRefListner=AssignedCustomerPickUpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())

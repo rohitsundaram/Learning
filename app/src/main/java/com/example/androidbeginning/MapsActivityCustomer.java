@@ -54,17 +54,20 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private Button CustomerLogoutBtn;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    Marker DriverMarker;
+    Marker DriverMarker,PickUpMarker;
     private Button CustomerCallACabBtn;
     private String customerID;
     private DatabaseReference CustomerDatabaseRef;
     private LatLng CustomerPickUpLocation;
     private DatabaseReference DriverAvailableRef;
     private int radius=1;
-    private Boolean driverFound=false;
+    private Boolean driverFound=false,requestType=false;
     private String driverFoundID;
     private DatabaseReference DriverRef;
     private DatabaseReference DriverLocationRef;
+    GeoQuery geoQuery;
+    private ValueEventListener DriverLocationRefListner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,19 +99,53 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         CustomerCallACabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GeoFire geoFire=new GeoFire(CustomerDatabaseRef);
-                geoFire.setLocation(customerID,new GeoLocation(lastLocation.getLatitude(),lastLocation.getLongitude()),
-                new GeoFire.CompletionListener() {
-                    @Override
-                    public void onComplete(String key, DatabaseError error) {
-
+                if(requestType)
+                {
+                    requestType=false;
+                    geoQuery.removeAllListeners();
+                    DriverLocationRef.removeEventListener(DriverLocationRefListner);
+                    if(driverFound!=null)
+                    {
+                        DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+                        DriverRef.setValue(true);
+                        driverFoundID=null;
                     }
+                    driverFound=false;
+                    radius=1;
+                    String customerID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    GeoFire geoFire=new GeoFire(CustomerDatabaseRef);
+                    geoFire.removeLocation(customerID, new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
 
-                });
-                CustomerPickUpLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick Up Customer From Here"));
-                CustomerCallACabBtn.setText("Getting your driver...");
-                GetCloseDriverCab();
+                        }
+                    });
+                    if(PickUpMarker!=null)
+                    {
+                        PickUpMarker.remove();
+                    }
+                    CustomerCallACabBtn.setText("Call a Cab");
+
+                }
+                else
+                {
+                    requestType=true;
+                    String customerID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    GeoFire geoFire=new GeoFire(CustomerDatabaseRef);
+                    geoFire.setLocation(customerID,new GeoLocation(lastLocation.getLatitude(),lastLocation.getLongitude()),
+                            new GeoFire.CompletionListener() {
+                                @Override
+                                public void onComplete(String key, DatabaseError error) {
+
+                                }
+
+                            });
+                    CustomerPickUpLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick Up Customer From Here"));
+                    CustomerCallACabBtn.setText("Getting your driver...");
+                    GetCloseDriverCab();
+                }
+
             }
         });
     }
@@ -164,7 +201,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
     private void GettingDriverLocation() {
-        DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
+        DriverLocationRefListner=DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
@@ -198,8 +235,16 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     location2.setLongitude(DriverLatLng.longitude);
 
                     float Distance=location1.distanceTo(location2);
-                    CustomerCallACabBtn.setText("Driver Found "+String.valueOf(Distance));
 
+                    if(Distance<90)
+                    {
+                        CustomerCallACabBtn.setText("Driver's Reached");
+                    }
+
+                    else {
+                        CustomerCallACabBtn.setText("Driver Found " + String.valueOf(Distance));
+                    }
+                    
                     DriverMarker=mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here"));
 
                 }
