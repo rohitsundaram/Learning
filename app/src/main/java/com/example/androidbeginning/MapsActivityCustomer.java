@@ -12,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -68,21 +71,22 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     GeoQuery geoQuery;
     private ValueEventListener DriverLocationRefListner;
 
-
+    //private RelativeLayout relativeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_customer);
 
-        CustomerLogoutBtn=(Button)findViewById(R.id.Customer_logout_btn);
+
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
         customerID=FirebaseAuth.getInstance().getCurrentUser().getUid();
         CustomerDatabaseRef=FirebaseDatabase.getInstance().getReference().child("Customers Requests");
-        CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
         DriverAvailableRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
         DriverLocationRef=FirebaseDatabase.getInstance().getReference().child("Drivers Working");
 
+        CustomerLogoutBtn=(Button)findViewById(R.id.Customer_logout_btn);
+        CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -106,8 +110,8 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     DriverLocationRef.removeEventListener(DriverLocationRefListner);
                     if(driverFound!=null)
                     {
-                        DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
-                        DriverRef.setValue(true);
+                        DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRideID");
+                        DriverRef.removeValue();
                         driverFoundID=null;
                     }
                     driverFound=false;
@@ -124,7 +128,12 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     {
                         PickUpMarker.remove();
                     }
+                    if(DriverMarker!=null)
+                    {
+                        DriverMarker.remove();
+                    }
                     CustomerCallACabBtn.setText("Call a Cab");
+                   // relativeLayout.setVisibility(View.GONE);
 
                 }
                 else
@@ -141,7 +150,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
 
                             });
                     CustomerPickUpLocation=new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick Up Customer From Here"));
+                    PickUpMarker=mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("My Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.user)));
                     CustomerCallACabBtn.setText("Getting your driver...");
                     GetCloseDriverCab();
                 }
@@ -154,12 +163,12 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private void GetCloseDriverCab()
     {
         GeoFire geoFire=new GeoFire(DriverAvailableRef);
-        GeoQuery geoQuery=geoFire.queryAtLocation(new GeoLocation(CustomerPickUpLocation.latitude,CustomerPickUpLocation.longitude),radius);
+        geoQuery=geoFire.queryAtLocation(new GeoLocation(CustomerPickUpLocation.latitude,CustomerPickUpLocation.longitude),radius);
         geoQuery.removeAllListeners();
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if(!driverFound)
+                if(!driverFound && requestType)
                 {
                     driverFound=true;
                     driverFoundID=key;
@@ -204,12 +213,14 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         DriverLocationRefListner=DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
+                if(snapshot.exists() && requestType)
                 {
                     List<Object> driverLocationMap=(List<Object>)snapshot.getValue();
                     double LocationLat=0;
                     double LocationLng=0;
                     CustomerCallACabBtn.setText("Driver Found");
+
+                    //relativeLayout.setVisibility(View.VISIBLE);
 
                     if(driverLocationMap.get(0)!=null)
                     {
@@ -245,7 +256,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                         CustomerCallACabBtn.setText("Driver Found " + String.valueOf(Distance));
                     }
                     
-                    DriverMarker=mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here"));
+                    DriverMarker=mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
 
                 }
             }
@@ -262,7 +273,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         mMap = googleMap;
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
@@ -275,9 +286,9 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
         locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
