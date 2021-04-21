@@ -1,107 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/logres"
     tools:context=".DriverRegisterActivity">
 
+
     <TextView
         android:id="@+id/login_text_driver"
-        android:layout_width="406dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="322dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginBottom="378dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="185dp"
         android:text="Driver Login"
         android:textAlignment="center"
         android:textColor="#FA121111"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/email_driver"
-        android:layout_width="354dp"
-        android:layout_height="47dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="305dp"
-        android:background="@color/design_default_color_background"
-        android:backgroundTint="#FCFCFD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_text_driver"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:textColor="#0C0C0C"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_text_driver" />
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/password_driver"
-        android:layout_width="354dp"
-        android:layout_height="47dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="239dp"
-        android:background="@color/design_default_color_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email_driver"
+        android:layout_marginTop="11dp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_driver" />
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/register_btn_driver"
-        android:layout_width="fill_parent"
-        android:layout_height="57dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="27dp"
-        android:layout_marginBottom="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
         android:background="@color/white"
         android:backgroundTint="#EA0202"
-        android:text="Register"
+        android:text="REGISTER"
         android:textColor="#EAE2E2"
+        android:layout_below="@+id/driver_login_btn"
+        android:layout_alignParentStart="true"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_login_btn" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/dont_hava_an_acc"
-        android:layout_width="412dp"
-        android:layout_height="42dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="121dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/driver_login_btn"
+        android:layout_marginTop="10dp"
         android:text="Don't have an account?"
-        android:textAlignment="center"
-        android:textColor="#F40F0F"
-        android:textSize="20sp" />
+        android:textColor="#E42424"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:id="@+id/driver_login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="159dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/password_driver"
+        android:layout_marginTop="12dp"
         android:backgroundTint="#FF9800"
         android:text="Login"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
