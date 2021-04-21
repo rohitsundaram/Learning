@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -38,9 +39,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivityCustomer extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -71,7 +75,9 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     GeoQuery geoQuery;
     private ValueEventListener DriverLocationRefListner;
 
-    //private RelativeLayout relativeLayout;
+    private TextView txtName,txtPhone,txtCarName;
+    private CircleImageView profilePic;
+    private RelativeLayout relativeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +94,12 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         CustomerLogoutBtn=(Button)findViewById(R.id.Customer_logout_btn);
         CustomerSettingsBtn=(Button)findViewById(R.id.Customer_Settings_btn);
         CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
+
+        txtName=findViewById(R.id.name_driver);
+        txtPhone=findViewById(R.id.phone_driver);
+        txtCarName=findViewById(R.id.car_name_driver);
+        relativeLayout=findViewById(R.id.rell);
+        profilePic=findViewById(R.id.profile_image_driver);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -120,7 +132,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     DriverLocationRef.removeEventListener(DriverLocationRefListner);
                     if(driverFound!=null)
                     {
-                        DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRideID");
+                        DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("CustomerRideId");
                         DriverRef.removeValue();
                         driverFoundID=null;
                     }
@@ -143,7 +155,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                         DriverMarker.remove();
                     }
                     CustomerCallACabBtn.setText("Call a Cab");
-                   // relativeLayout.setVisibility(View.GONE);
+                    relativeLayout.setVisibility(View.GONE);
 
                 }
                 else
@@ -230,7 +242,8 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     double LocationLng=0;
                     CustomerCallACabBtn.setText("Driver Found");
 
-                    //relativeLayout.setVisibility(View.VISIBLE);
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    getAssignedDriverInformation();
 
                     if(driverLocationMap.get(0)!=null)
                     {
@@ -347,5 +360,36 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         WelcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(WelcomeIntent);
         finish();
+    }
+
+    private void getAssignedDriverInformation()
+    {
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.getChildrenCount()>0)
+                {
+                    String name=snapshot.child("name").getValue().toString();
+                    String phone=snapshot.child("phone").getValue().toString();
+                    String car=snapshot.child("car").getValue().toString();
+
+                    txtName.setText(name);
+                    txtPhone.setText(phone);
+                    txtCarName.setText(car);
+
+
+                    if(snapshot.hasChild("image")) {
+                        String image = snapshot.child("image").getValue().toString();
+                        Picasso.get().load(image).into(profilePic);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

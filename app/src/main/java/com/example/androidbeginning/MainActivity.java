@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
           public void run()
           {
               try{
-                  sleep(7000);
+                  sleep(3000);
               }
               catch(Exception e)
               {

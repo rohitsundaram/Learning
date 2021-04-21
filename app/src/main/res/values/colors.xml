@@ -5,7 +5,7 @@
     <color name="BLUE">#44a7ea</color>
     <color name="teal_200">#CA0BD5</color>
     <color name="teal_700">#ff0000</color>
-    <color name="black">#ff0000</color>
-    <color name="white">#ff0000</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
     <color name="colorPrimaryDark">#c880ff</color>
 </resources>
