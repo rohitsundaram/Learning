@@ -86,11 +86,21 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
         DriverLocationRef=FirebaseDatabase.getInstance().getReference().child("Drivers Working");
 
         CustomerLogoutBtn=(Button)findViewById(R.id.Customer_logout_btn);
+        CustomerSettingsBtn=(Button)findViewById(R.id.Customer_Settings_btn);
         CustomerCallACabBtn=(Button)findViewById(R.id.Customer_call_a_cab_btn);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        CustomerSettingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MapsActivityCustomer.this,SettingsActivity.class);
+                intent.putExtra("type","Customers");
+                startActivity(intent);
+            }
+        });
 
         CustomerLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +220,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
     private void GettingDriverLocation() {
-        DriverLocationRefListner=DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
+        DriverLocationRefListner=DriverAvailableRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && requestType)

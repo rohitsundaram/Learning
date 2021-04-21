@@ -81,6 +81,15 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        DriverSettingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MapsActivityDriver.this,SettingsActivity.class);
+                intent.putExtra("type","Drivers");
+                startActivity(intent);
+            }
+        });
+
         DriverLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
