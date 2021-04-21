@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register"
+    android:background="@drawable/logres"
     tools:context=".DriverRegisterActivity">
 
     <TextView
@@ -22,6 +22,7 @@
         android:textAlignment="center"
         android:textColor="#FA121111"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,15 +37,12 @@
         android:layout_marginTop="18dp"
         android:layout_marginEnd="27dp"
         android:layout_marginBottom="305dp"
-        android:background="@color/cardview_light_background"
-        android:backgroundTint="#FFFFFF"
+        android:background="@color/design_default_color_background"
+        android:backgroundTint="#FCFCFD"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textColor="@color/material_on_surface_emphasis_high_type"
-        android:textColorHint="#423F3F"
-        android:textSize="20sp"
-        android:textStyle="normal"
+        android:textColor="#0C0C0C"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_text_driver" />
 
@@ -59,14 +57,10 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="27dp"
         android:layout_marginBottom="239dp"
-        android:background="@color/cardview_light_background"
+        android:background="@color/design_default_color_background"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:textColor="#191717"
-        android:textColorHint="#757474"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_driver" />
 
@@ -82,18 +76,22 @@
         android:text="Register"
         android:textColor="#EAE2E2"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/driver_login_btn" />
 
     <TextView
         android:id="@+id/dont_hava_an_acc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="412dp"
+        android:layout_height="42dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="128dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="121dp"
         android:text="Don't have an account?"
+        android:textAlignment="center"
         android:textColor="#F40F0F"
         android:textSize="20sp" />
 
@@ -101,10 +99,9 @@
         android:id="@+id/driver_login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="158dp"
         android:layout_marginBottom="159dp"
         android:backgroundTint="#FF9800"
-        android:text="Login" />
+        android:text="Login"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

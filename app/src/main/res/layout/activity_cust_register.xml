@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register"
+    android:background="@drawable/logres"
     tools:context=".CustRegisterActivity">
 
     <TextView
@@ -17,8 +17,9 @@
         android:layout_marginBottom="372dp"
         android:text="Customer Login"
         android:textAlignment="center"
-        android:textColor="#090909"
-        android:textSize="20sp" />
+        android:textColor="#FA121111"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/email_cust"
@@ -63,7 +64,8 @@
         android:text="Don't have an account?"
         android:textAlignment="center"
         android:textColor="#E42424"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:id="@+id/register_btn_cust"
@@ -72,9 +74,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="67dp"
         android:background="@color/white"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="#EA0202"
         android:text="REGISTER"
-        android:textColor="#F3ECEC"
+        android:textColor="#EAE2E2"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -82,10 +84,9 @@
         android:id="@+id/cust_login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="158dp"
         android:layout_marginBottom="167dp"
         android:backgroundTint="#FF9800"
-        android:text="Login" />
+        android:text="Login"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

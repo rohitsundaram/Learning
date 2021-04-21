@@ -111,8 +111,6 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         startActivity(DriverIntent);
                         Toast.makeText(DriverRegisterActivity.this, "Driver Login Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
-
-
                     }
 
                     else
@@ -150,7 +148,6 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         startActivity(DriverIntent);
                         Toast.makeText(DriverRegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                         loading.dismiss();
-
 
                     }
 

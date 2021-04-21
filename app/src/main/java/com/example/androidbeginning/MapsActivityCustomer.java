@@ -232,7 +232,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
     private void GettingDriverLocation() {
-        DriverLocationRefListner=DriverAvailableRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
+        DriverLocationRefListner=DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && requestType)

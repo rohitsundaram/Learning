@@ -156,7 +156,7 @@ public class MapsActivityDriver extends FragmentActivity implements OnMapReadyCa
 
     private void GetAssignedCustomerPickUpLocation()
     {
-        AssignedCustomerPickUpRef=FirebaseDatabase.getInstance().getReference().child("Customer Requests").child(customerID).child("l");
+        AssignedCustomerPickUpRef=FirebaseDatabase.getInstance().getReference().child("Customers Requests").child(customerID).child("l");
         AssignedCustomerPickUpRefListner=AssignedCustomerPickUpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
