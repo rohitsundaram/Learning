@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -41,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private DatabaseReference CustomerDatabaseRef;
     private LatLng CustomerPickUpLocation;
     private DatabaseReference DriverAvailableRef;
-    private int radius=1;
+    private int radius=2000;
     private Boolean driverFound=false,requestType=false;
     private String driverFoundID;
     private DatabaseReference DriverRef;
@@ -78,6 +80,11 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private TextView txtName,txtPhone,txtCarName;
     private CircleImageView profilePic;
     private RelativeLayout relativeLayout;
+
+    //New Addition
+    private ArrayList<String> UserList=new ArrayList<String>();
+    private int count=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,6 +189,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
 
+
     private void GetCloseDriverCab()
     {
         GeoFire geoFire=new GeoFire(DriverAvailableRef);
@@ -192,14 +200,24 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
             public void onKeyEntered(String key, GeoLocation location) {
                 if(!driverFound && requestType)
                 {
-                    driverFound=true;
+
+                    //coooo
+                   // driverFound=true;
+                    //cppp
                     driverFoundID=key;
+
+                    //coooo
+                    /*
                     DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
                     HashMap driverMap=new HashMap();
                     driverMap.put("CustomerRideId",customerID);
-                    DriverRef.updateChildren(driverMap);
+                    DriverRef.updateChildren(driverMap);*/
+                    //cppppp
 
-                    GettingDriverLocation();
+                    UserList.add(key);
+                    count++;
+                    //GettingDriverLocation();
+
                     CustomerCallACabBtn.setText("Looking for Driver Location...");
                 }
 
@@ -217,11 +235,14 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
 
             @Override
             public void onGeoQueryReady() {
-                if(!driverFound)
+                /*if(!driverFound)
                 {
                     radius=radius+1;
                     GetCloseDriverCab();
                 }
+                count=count+1;*/
+
+                GettingDriverLocation();
             }
 
             @Override
@@ -232,63 +253,65 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
     private void GettingDriverLocation() {
-        DriverLocationRefListner=DriverLocationRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists() && requestType)
-                {
-                    List<Object> driverLocationMap=(List<Object>)snapshot.getValue();
-                    double LocationLat=0;
-                    double LocationLng=0;
-                    CustomerCallACabBtn.setText("Driver Found");
+            DriverLocationRefListner = DriverAvailableRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists() && requestType) {
+                        List<Object> driverLocationMap = (List<Object>) snapshot.getValue();
+                        double LocationLat = 0;
+                        double LocationLng = 0;
+                        CustomerCallACabBtn.setText("Driver Found");
 
-                    relativeLayout.setVisibility(View.VISIBLE);
-                    getAssignedDriverInformation();
+                        //cooooo
+                        //relativeLayout.setVisibility(View.VISIBLE);
+                        //getAssignedDriverInformation();
+                        //cpppp
 
-                    if(driverLocationMap.get(0)!=null)
-                    {
-                        LocationLat=Double.parseDouble(driverLocationMap.get(0).toString());
-                    }
+                        if (driverLocationMap.get(0) != null) {
+                            LocationLat = Double.parseDouble(driverLocationMap.get(0).toString());
+                        }
 
-                    if(driverLocationMap.get(1)!=null)
-                    {
-                        LocationLng=Double.parseDouble(driverLocationMap.get(1).toString());
-                    }
-                    LatLng DriverLatLng=new LatLng(LocationLat,LocationLng);
-                    if(DriverMarker!=null)
-                    {
-                        DriverMarker.remove();
-                    }
+                        if (driverLocationMap.get(1) != null) {
+                            LocationLng = Double.parseDouble(driverLocationMap.get(1).toString());
+                        }
+                        LatLng DriverLatLng = new LatLng(LocationLat, LocationLng);
 
-                    Location location1=new Location("");
-                    location1.setLatitude(CustomerPickUpLocation.latitude);
-                    location1.setLongitude(CustomerPickUpLocation.longitude);
 
-                    Location location2=new Location("");
-                    location2.setLatitude(DriverLatLng.latitude);
-                    location2.setLongitude(DriverLatLng.longitude);
+                        if (DriverMarker != null) {
+                            DriverMarker.remove();
+                        }
 
-                    float Distance=location1.distanceTo(location2);
+                        Location location1 = new Location("");
+                        location1.setLatitude(CustomerPickUpLocation.latitude);
+                        location1.setLongitude(CustomerPickUpLocation.longitude);
 
-                    if(Distance<90)
+                        Location location2 = new Location("");
+                        location2.setLatitude(DriverLatLng.latitude);
+                        location2.setLongitude(DriverLatLng.longitude);
+
+                        float Distance = location1.distanceTo(location2);
+
+                        //cooooooo
+                    /*if(Distance<90)
                     {
                         CustomerCallACabBtn.setText("Driver's Reached");
                     }
 
                     else {
                         CustomerCallACabBtn.setText("Driver Found " + String.valueOf(Distance));
+                    }*/
+                        //cpppppp
+                        DriverMarker = mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
+
                     }
-                    
-                    DriverMarker=mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     @Override
