@@ -69,7 +69,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     private DatabaseReference CustomerDatabaseRef;
     private LatLng CustomerPickUpLocation;
     private DatabaseReference DriverAvailableRef;
-    private int radius=2000;
+    private int radius= 500;
     private Boolean driverFound=false,requestType=false;
     private String driverFoundID;
     private DatabaseReference DriverRef;
@@ -84,6 +84,8 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     //New Addition
     private ArrayList<String> UserList=new ArrayList<String>();
     private int count=0;
+    private HashMap<String,Marker>myMap=new HashMap<String, Marker>();
+    Boolean myKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,9 +159,12 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     {
                         PickUpMarker.remove();
                     }
-                    if(DriverMarker!=null)
-                    {
-                        DriverMarker.remove();
+
+                    for(String driverFoundId:UserList) {
+                        DriverMarker=myMap.get(driverFoundId);
+                        if (DriverMarker != null) {
+                            DriverMarker.remove();
+                        }
                     }
                     CustomerCallACabBtn.setText("Call a Cab");
                     relativeLayout.setVisibility(View.GONE);
@@ -201,8 +206,8 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                 if(!driverFound && requestType)
                 {
 
-                    //coooo
-                   // driverFound=true;
+                    //coooo**********************
+                    //driverFound=true;
                     //cppp
                     driverFoundID=key;
 
@@ -211,11 +216,14 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     DriverRef=FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
                     HashMap driverMap=new HashMap();
                     driverMap.put("CustomerRideId",customerID);
-                    DriverRef.updateChildren(driverMap);*/
+                    DriverRef.updateChildren(driverMap);
+                    */
                     //cppppp
 
                     UserList.add(key);
                     count++;
+
+                    //***************************
                     //GettingDriverLocation();
 
                     CustomerCallACabBtn.setText("Looking for Driver Location...");
@@ -240,7 +248,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                     radius=radius+1;
                     GetCloseDriverCab();
                 }
-                count=count+1;*/
+                //count=count+1;*/
 
                 GettingDriverLocation();
             }
@@ -253,14 +261,23 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
     }
 
     private void GettingDriverLocation() {
+        for (String driverFoundID : UserList) {
             DriverLocationRefListner = DriverAvailableRef.child(driverFoundID).child("l").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(myMap.containsKey(driverFoundID))
+                    {
+                        DriverMarker=myMap.get(driverFoundID);
+                    }
+                    else
+                    {
+                        DriverMarker=null;
+                    }
                     if (snapshot.exists() && requestType) {
                         List<Object> driverLocationMap = (List<Object>) snapshot.getValue();
                         double LocationLat = 0;
                         double LocationLng = 0;
-                        CustomerCallACabBtn.setText("Driver Found");
+                        CustomerCallACabBtn.setText("Drivers Found");
 
                         //cooooo
                         //relativeLayout.setVisibility(View.VISIBLE);
@@ -291,18 +308,19 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
 
                         float Distance = location1.distanceTo(location2);
 
-                        //cooooooo
-                    /*if(Distance<90)
-                    {
-                        CustomerCallACabBtn.setText("Driver's Reached");
-                    }
+                        //cooooooo****************
+                        /*
+                        if (Distance < 90) {
+                            CustomerCallACabBtn.setText("Driver's Reached");
+                        } else {
+                            CustomerCallACabBtn.setText("Driver Found " + String.valueOf(Distance));
+                        }*/
 
-                    else {
-                        CustomerCallACabBtn.setText("Driver Found " + String.valueOf(Distance));
-                    }*/
-                        //cpppppp
+
                         DriverMarker = mMap.addMarker(new MarkerOptions().position(DriverLatLng).title("Your Driver is Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.car)));
 
+                        myMap.put(driverFoundID,DriverMarker);
+                        //DriverMarker=null;
                     }
                 }
 
@@ -312,6 +330,7 @@ public class MapsActivityCustomer extends FragmentActivity implements OnMapReady
                 }
             });
 
+        }
     }
 
     @Override
